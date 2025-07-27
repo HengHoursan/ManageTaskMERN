@@ -195,25 +195,40 @@ const TaskTable = () => {
   }
   const confirmDeleteTask = async () => {
     if (!taskToDelete) return;
+
     try {
       setIsLoading(true);
       const token = localStorage.getItem("token");
       if (!token) return toast.error("Missing token");
+
       await deleteTask(taskToDelete.id, token);
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      toast.success("Task deleted",{
+
+      // Optimistically update the UI
+      setTasks((prevTasks) =>
+          prevTasks.filter((task) => task.id !== taskToDelete.id)
+      );
+
+      setOpenDeleteDialog(false);
+      setTaskToDelete(null);
+
+      // Delay for 2 seconds
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Refresh latest data from server
+      await fetchData();
+
+      toast.success("Task deleted", {
         description: "Task deleted successfully",
         duration: 4000,
       });
-      setOpenDeleteDialog(false);
-      setTaskToDelete(null)
-      await fetchData();
     } catch (error) {
       toast.error("Failed to delete task");
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
   };
+
   const handleSubmitForm = async (formData:FormData)=> {
     if (isEditingTask) {
       await handleUpdateTask(formData);
