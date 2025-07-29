@@ -1,7 +1,7 @@
 const db = require("../model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const {getTaskById} = require("./task.controller");
+// const {getTaskById} = require("./task.controller");
 const User = db.user;
 
 const getAllUsers = async (req, res) => {

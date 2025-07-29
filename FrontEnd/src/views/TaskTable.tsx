@@ -89,7 +89,6 @@ const getStatusBadge = (status: string) => {
     </span>
   );
 };
-
 const TaskTable = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
